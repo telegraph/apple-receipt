@@ -1,0 +1,212 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "CloudFormation template to build the Google Receipt Validator Infrastructure",
+  "Parameters": {
+    "ApplicationName": {
+      "Description": "The application name",
+      "Type": "String"
+    },
+    "BuildVersion": {
+      "Description": "The version of the build",
+      "Type"       : "String"
+    },
+    "DeploymentEnv": {
+      "Description": "The Application Deployment Environment",
+      "Type": "String",
+      "Default": "preprod"
+    },
+    "LambdaRuntime": {
+      "Description": "The lambda runtime configuration",
+      "Type": "String",
+      "Default": "java8"
+    },
+    "LambdaMemory": {
+      "Description": "The memory used for lambda function [MB]",
+      "Type": "Number",
+      "Default": 512,
+      "AllowedValues": [
+        128,
+        256,
+        512,
+        1024
+      ]
+    },
+    "LambdaTimeout": {
+      "Description": "The timeout used for lambda function [sec]",
+      "Type": "Number",
+      "Default": 30
+    },
+    "LambdaHandler": {
+      "Description": "java8 Handler",
+      "Type": "String",
+      "Default": "uk.co.telegraph.googleplayreceipt.Main::validateGooglePlayReceipt"
+    }
+  },
+  "Conditions":{
+    "IsDefinedApplicationName": {"Fn::Not":   [{"Fn::Equals":[{"Ref": "ApplicationName"}, ""]}] }
+  },
+  "Resources":{
+    "LambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Description": "Google Receipt Validator Lambda Function",
+        "FunctionName": {"Fn::Join": ["-",[{"Ref":"ApplicationName"}, {"Ref":"DeploymentEnv"}]]},
+        "Environment": {
+          "Variables": {
+            "DeploymentEnv": {"Ref":"DeploymentEnv"}
+          }
+        },
+        "Runtime": {
+          "Ref": "LambdaRuntime"
+        },
+        "Handler": {
+          "Ref": "LambdaHandler"
+        },
+        "MemorySize": {
+          "Ref": "LambdaMemory"
+        },
+        "Timeout": {
+          "Ref": "LambdaTimeout"
+        },
+        "Code": {
+          "S3Bucket": "commerce-artifacts-repo",
+          "S3Key": {"Fn::Join": ["",["release/uk/co/telegraph/google-play-receipt_2.11/",{"Ref": "BuildVersion"},"/google-play-receipt_2.11-",{"Ref": "BuildVersion"},".jar"]]}
+        },
+        "Role": {
+          "Fn::GetAtt" : ["LambdaExecutionRole", "Arn"]
+        }
+      }
+    },
+    "ProxyApi": {
+      "Type": "AWS::ApiGateway::RestApi",
+      "Properties": {
+        "Name": "Google Receipt Proxy API",
+        "Body": {
+          "Fn::Join": [
+            "",
+            [
+              "{\r\n  \"swagger\": \"2.0\",\r\n  \"info\": {\r\n    \"version\": \"2018-02-22T08:35:11Z\",\r\n    \"title\": \"Google Receipt Validator\"\r\n  },\r\n  \"host\": \"google-receipt.commerce-preprod.telegraph.co.uk\",\r\n  \"schemes\": [\r\n    \"https\"\r\n  ],\r\n  \"paths\": {\r\n    \"\/identity/validatereceipt/googleplay\": {\r\n      \"post\": {\r\n        \"produces\": [\r\n          \"application\/json\"\r\n        ],\r\n        \"responses\": {\r\n          \"200\": {\r\n            \"description\": \"200 response\",\r\n            \"schema\": {\r\n              \"$ref\": \"#\/definitions\/Empty\"\r\n            }\r\n          }\r\n        },\r\n        \"x-amazon-apigateway-integration\": {\r\n          \"responses\": {\r\n            \"default\": {\r\n              \"statusCode\": \"200\"\r\n            }\r\n          },\r\n          \"uri\": \"arn:aws:apigateway:",
+              {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", {"Fn::GetAtt": ["LambdaFunction", "Arn"]},
+              "\/invocations\",\r\n          \"passthroughBehavior\": \"when_no_match\",\r\n          \"httpMethod\": \"POST\",\r\n          \"contentHandling\": \"CONVERT_TO_TEXT\",\r\n          \"type\": \"aws_proxy\"\r\n        }\r\n      }\r\n    }\r\n  },\r\n  \"definitions\": {\r\n    \"Empty\": {\r\n      \"type\": \"object\",\r\n      \"title\": \"Empty Schema\"\r\n    }\r\n  }\r\n}"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "LambdaFunction"
+      ]
+    },
+    "ProxyApiPreProdDeployment": {
+      "Type" : "AWS::ApiGateway::Deployment",
+      "Properties" : {
+        "Description" : "preprod deployment",
+        "RestApiId" : {
+          "Ref": "ProxyApi"
+        },
+        "StageDescription" : {
+          "LoggingLevel" : "INFO",
+          "DataTraceEnabled": true
+        },
+        "StageName" : "preprod"
+      }
+    },
+    "LambdaExecutionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "Path": "/",
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+        ]
+      }
+    },
+    "LambdaPolicy": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "LambdaProxyExecute",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "ec2:Describe*"
+              ],
+              "Resource": "*"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "ec2:CreateNetworkInterface",
+                "ec2:DescribeNetworkInterfaces",
+                "ec2:DetachNetworkInterface",
+                "ec2:DeleteNetworkInterface"
+              ],
+              "Resource": "*"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Resource": "arn:aws:logs:*:*:*"
+            }
+          ]
+        },
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ]
+      }
+    },
+    "APIPolicy": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "LambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ProxyApi"
+              },
+              "*"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "ProxyApi"
+      ]
+    }
+  }
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "ParameterKey": "ApplicationName",
+    "ParameterValue": "google-receipt-validator"
+  },
+  {
+    "ParameterKey": "BuildVersion",
+    "ParameterValue": "1.0.0"
+  },
+  {
+    "ParameterKey"  : "DeploymentEnv",
+    "ParameterValue": "preprod"
+  }
+]
