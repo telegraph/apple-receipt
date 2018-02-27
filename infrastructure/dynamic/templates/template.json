@@ -33,7 +33,7 @@
     "LambdaTimeout": {
       "Description": "The timeout used for lambda function [sec]",
       "Type": "Number",
-      "Default": 30
+      "Default": 29
     },
     "LambdaHandler": {
       "Description": "java8 Handler",
