@@ -7,7 +7,7 @@ lazy val buildNumber = sys.env.get("BUILD_NUMBER").map( bn => s"b$bn")
 lazy val CommonSettings = Seq(
   name              := "google-play-receipt",
   organization      := "uk.co.telegraph",
-  version           := "1.0.0",
+  version           := buildNumber.getOrElse("1.0.0"),
   scalaVersion      := "2.11.8",
   isSnapshot        := buildNumber.isEmpty,
   scalacOptions     += "-target:jvm-1.8",
