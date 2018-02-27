@@ -12,8 +12,7 @@
     },
     "DeploymentEnv": {
       "Description": "The Application Deployment Environment",
-      "Type": "String",
-      "Default": "preprod"
+      "Type": "String"
     },
     "LambdaRuntime": {
       "Description": "The lambda runtime configuration",
@@ -40,6 +39,14 @@
       "Description": "java8 Handler",
       "Type": "String",
       "Default": "uk.co.telegraph.googleplayreceipt.Main::validateGooglePlayReceipt"
+    },
+    "Certificate": {
+      "Description": "Certificate for the domain",
+      "Type": "String"
+    },
+    "Domain": {
+      "Description": "The sub-domain",
+      "Type": "String"
     }
   },
   "Conditions":{
@@ -85,7 +92,7 @@
           "Fn::Join": [
             "",
             [
-              "{\r\n  \"swagger\": \"2.0\",\r\n  \"info\": {\r\n    \"version\": \"2018-02-22T08:35:11Z\",\r\n    \"title\": \"Google Receipt Validator\"\r\n  },\r\n  \"host\": \"google-receipt.commerce-preprod.telegraph.co.uk\",\r\n  \"schemes\": [\r\n    \"https\"\r\n  ],\r\n  \"paths\": {\r\n    \"\/identity/validatereceipt/googleplay\": {\r\n      \"post\": {\r\n        \"produces\": [\r\n          \"application\/json\"\r\n        ],\r\n        \"responses\": {\r\n          \"200\": {\r\n            \"description\": \"200 response\",\r\n            \"schema\": {\r\n              \"$ref\": \"#\/definitions\/Empty\"\r\n            }\r\n          }\r\n        },\r\n        \"x-amazon-apigateway-integration\": {\r\n          \"responses\": {\r\n            \"default\": {\r\n              \"statusCode\": \"200\"\r\n            }\r\n          },\r\n          \"uri\": \"arn:aws:apigateway:",
+              "{\r\n  \"swagger\": \"2.0\",\r\n  \"info\": {\r\n    \"version\": \"2018-02-22T08:35:11Z\",\r\n    \"title\": \"Google Receipt Validator\"\r\n  },\r\n  \"host\": \"api.telegraph.co.uk\",\r\n  \"schemes\": [\r\n    \"https\"\r\n  ],\r\n  \"paths\": {\r\n    \"\/validatereceipt/googleplay\": {\r\n      \"post\": {\r\n        \"produces\": [\r\n          \"application\/json\"\r\n        ],\r\n        \"responses\": {\r\n          \"200\": {\r\n            \"description\": \"200 response\",\r\n            \"schema\": {\r\n              \"$ref\": \"#\/definitions\/Empty\"\r\n            }\r\n          }\r\n        },\r\n        \"x-amazon-apigateway-integration\": {\r\n          \"responses\": {\r\n            \"default\": {\r\n              \"statusCode\": \"200\"\r\n            }\r\n          },\r\n          \"uri\": \"arn:aws:apigateway:",
               {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", {"Fn::GetAtt": ["LambdaFunction", "Arn"]},
               "\/invocations\",\r\n          \"passthroughBehavior\": \"when_no_match\",\r\n          \"httpMethod\": \"POST\",\r\n          \"contentHandling\": \"CONVERT_TO_TEXT\",\r\n          \"type\": \"aws_proxy\"\r\n        }\r\n      }\r\n    }\r\n  },\r\n  \"definitions\": {\r\n    \"Empty\": {\r\n      \"type\": \"object\",\r\n      \"title\": \"Empty Schema\"\r\n    }\r\n  }\r\n}"
             ]
@@ -96,10 +103,10 @@
         "LambdaFunction"
       ]
     },
-    "ProxyApiPreProdDeployment": {
+    "ProxyApiDeployment": {
       "Type" : "AWS::ApiGateway::Deployment",
       "Properties" : {
-        "Description" : "preprod deployment",
+        "Description" : "api deployment",
         "RestApiId" : {
           "Ref": "ProxyApi"
         },
@@ -107,7 +114,26 @@
           "LoggingLevel" : "INFO",
           "DataTraceEnabled": true
         },
-        "StageName" : "preprod"
+        "StageName" : {"Ref": "DeploymentEnv"}
+      }
+    },
+    "CustomDomain" : {
+      "Type": "AWS::ApiGateway::DomainName",
+      "Properties": {
+        "DomainName": {"Ref":"Domain"},
+        "CertificateArn": {"Ref":"Certificate"}
+      }
+    },
+    "CustomDomainMapping": {
+      "Type": "AWS::ApiGateway::BasePathMapping",
+      "Properties": {
+        "DomainName": {
+          "Ref": "CustomDomain"
+        },
+        "RestApiId": {
+          "Ref": "ProxyApi"
+        },
+        "Stage" : {"Ref": "DeploymentEnv"}
       }
     },
     "LambdaExecutionRole": {
@@ -141,16 +167,6 @@
               "Effect": "Allow",
               "Action": [
                 "ec2:Describe*"
-              ],
-              "Resource": "*"
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "ec2:CreateNetworkInterface",
-                "ec2:DescribeNetworkInterfaces",
-                "ec2:DetachNetworkInterface",
-                "ec2:DeleteNetworkInterface"
               ],
               "Resource": "*"
             },

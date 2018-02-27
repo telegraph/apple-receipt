@@ -10,5 +10,13 @@
   {
     "ParameterKey"  : "DeploymentEnv",
     "ParameterValue": "preprod"
+  },
+  {
+    "ParameterKey"  : "Certificate",
+    "ParameterValue": "arn:aws:acm:us-east-1:267208445930:certificate/3843e241-9d6a-4a49-b38d-ea322c1c8e95"
+  },
+  {
+    "ParameterKey"  : "Domain",
+    "ParameterValue": "google-receipt-preprod.commerce-preprod.telegraph.co.uk"
   }
 ]

@@ -32,9 +32,10 @@ lazy val root = (project in file(".")).
     )
   ).
   settings(
-    (stackCustomParams in DeployDev    ) += ("BuildVersion" -> version.value),
     (stackCustomParams in DeployPreProd) += ("BuildVersion" -> version.value),
-    (stackCustomParams in DeployProd   ) += ("BuildVersion" -> version.value)
+    (stackCustomParams in DeployProd   ) += ("BuildVersion" -> version.value),
+    (stackTags in DeployPreProd) += ("Billing" -> "coreapi"),
+    (stackTags in DeployProd) += ("Billing" -> "coreapi")
   )
 
 (testFrameworks in IntegrationTest) += new TestFramework("com.waioeka.sbt.runner.CucumberFramework")
