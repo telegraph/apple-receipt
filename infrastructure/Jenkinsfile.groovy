@@ -35,16 +35,10 @@ node {
         """
     }
 
-    stage("Static Setup"){
-        sh """
-            ${sbtFolder}/sbt static:stackSetup
-        """
-    }
-    
     stage("Publish"){
-        sh """
-            ${sbtFolder}/sbt publish
+        sh """            
             ${sbtFolder}/sbt assembly
+            ${sbtFolder}/sbt publish
         """
     }
 
