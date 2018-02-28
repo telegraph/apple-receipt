@@ -13,7 +13,7 @@
   },
   {
     "ParameterKey"  : "Certificate",
-    "ParameterValue": "arn:aws:acm:eu-west-1:553346130293:certificate/d9a23c03-23c3-4d65-893d-2f07b9038ece"
+    "ParameterValue": "arn:aws:acm:us-east-1:553346130293:certificate/13635c75-0a65-4755-a095-a8c84c7b877a"
   },
   {
     "ParameterKey"  : "Domain",
