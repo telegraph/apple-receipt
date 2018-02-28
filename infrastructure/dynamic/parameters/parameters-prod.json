@@ -1,0 +1,22 @@
+[
+  {
+    "ParameterKey": "ApplicationName",
+    "ParameterValue": "google-receipt-validator"
+  },
+  {
+    "ParameterKey": "BuildVersion",
+    "ParameterValue": "1.0.0"
+  },
+  {
+    "ParameterKey"  : "DeploymentEnv",
+    "ParameterValue": "prod"
+  },
+  {
+    "ParameterKey"  : "Certificate",
+    "ParameterValue": "arn:aws:acm:eu-west-1:553346130293:certificate/d9a23c03-23c3-4d65-893d-2f07b9038ece"
+  },
+  {
+    "ParameterKey"  : "Domain",
+    "ParameterValue": "google-receipt.commerce-prod.telegraph.co.uk"
+  }
+]
