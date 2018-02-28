@@ -17,6 +17,6 @@
   },
   {
     "ParameterKey"  : "Domain",
-    "ParameterValue": "google-receipt.commerce-prod.telegraph.co.uk"
+    "ParameterValue": "google-receipt-prod.commerce-prod.telegraph.co.uk"
   }
 ]
