@@ -1,4 +1,4 @@
-package uk.co.telegraph.googleplayreceipt
+package uk.co.telegraph.applereceipt.test
 
 import java.io.{InputStream, OutputStream}
 
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.{JsonMappingException, ObjectMapper}
 import com.typesafe.config.{Config, ConfigFactory}
 import com.typesafe.scalalogging.Logger
 import org.apache.commons.lang3.StringUtils
-import uk.co.telegraph.googleplayreceipt.Main._
+import Main._
 
 trait AppConfig {
   val Environment: String = Option(System.getenv("ENVIRONMENT")) filter { x => x == "qa" || x == "prod" } getOrElse "dev"

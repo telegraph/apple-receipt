@@ -1,4 +1,4 @@
-package uk.co.telegraph.googleplayreceipt
+package uk.co.telegraph.applereceipt.test
 
 import java.nio.charset.StandardCharsets
 import java.util.Base64

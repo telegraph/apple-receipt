@@ -1,4 +1,4 @@
-package uk.co.telegraph.googleplayreceipt.steps
+package uk.co.telegraph.applereceipt.steps
 
 import cucumber.api.scala.{EN, ScalaDsl}
 import org.scalatest.Matchers

@@ -1,4 +1,4 @@
-package uk.co.telegraph.googleplayreceipt
+package uk.co.telegraph.applereceipt
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, InputStream}
 
@@ -7,6 +7,9 @@ import com.typesafe.config.{Config, ConfigFactory}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{FunSpec, Matchers}
+import uk.co.telegraph.applereceipt.example.test.{ApiGatewayRequest, Clock, Main}
+import uk.co.telegraph.applereceipt.example.{ApiGatewayResponse, Clock, Main}
+import uk.co.telegraph.applereceipt.test.{ApiGatewayRequest, ApiGatewayResponse, Clock, Main}
 
 @RunWith(classOf[JUnitRunner])
 class MainTest extends FunSpec with Matchers{

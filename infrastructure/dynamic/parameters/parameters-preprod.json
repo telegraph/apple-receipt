@@ -1,7 +1,7 @@
 [
   {
     "ParameterKey": "ApplicationName",
-    "ParameterValue": "google-receipt-validator"
+    "ParameterValue": "apple-receipt-validator"
   },
   {
     "ParameterKey": "BuildVersion",
@@ -17,6 +17,6 @@
   },
   {
     "ParameterKey"  : "Domain",
-    "ParameterValue": "google-receipt-preprod.commerce-preprod.telegraph.co.uk"
+    "ParameterValue": "apple-receipt-preprod.commerce-preprod.telegraph.co.uk"
   }
 ]

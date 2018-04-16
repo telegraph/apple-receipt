@@ -1,4 +1,4 @@
-package uk.co.telegraph.googleplayreceipt
+package uk.co.telegraph.applereceipt.test
 
 import com.fasterxml.jackson.annotation.{JsonCreator, JsonIgnoreProperties, JsonProperty}
 

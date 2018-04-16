@@ -1,4 +1,4 @@
-package uk.co.telegraph.googleplayreceipt
+package uk.co.telegraph.applereceipt
 
 import net.serenitybdd.cucumber.CucumberWithSerenity
 import com.waioeka.sbt.runner.CucumberRunner

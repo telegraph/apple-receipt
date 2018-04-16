@@ -1,10 +1,8 @@
-package uk.co.telegraph.googleplayreceipt
+package uk.co.telegraph.applereceipt.test
 
-import org.apache.commons.lang3.StringUtils
 import java.nio.charset.Charset
 import java.security._
-import java.security.spec.InvalidKeySpecException
-import java.security.spec.X509EncodedKeySpec
+import java.security.spec.{InvalidKeySpecException, X509EncodedKeySpec}
 import java.util.Base64
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
@@ -14,7 +12,7 @@ import com.google.api.client.util.SecurityUtils
 import com.google.api.services.androidpublisher.{AndroidPublisher, AndroidPublisherScopes}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.Logger
-import uk.co.telegraph.googleplayreceipt.ValidateGooglePlayReceipt._
+import org.apache.commons.lang3.StringUtils
 
 object ValidateGooglePlayReceipt {
   val UNAUTHORIZED = 401

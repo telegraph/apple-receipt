@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "CloudFormation template to build the Google Receipt Validator Infrastructure",
+  "Description": "CloudFormation template to build the Apple Receipt Validator Infrastructure",
   "Parameters": {
     "ApplicationName": {
       "Description": "The application name",
@@ -38,7 +38,7 @@
     "LambdaHandler": {
       "Description": "java8 Handler",
       "Type": "String",
-      "Default": "uk.co.telegraph.googleplayreceipt.Main::validateGooglePlayReceipt"
+      "Default": "uk.co.telegraph.applereceipt.Main::validateAppleReceipt"
     },
     "Certificate": {
       "Description": "Certificate for the domain",
@@ -56,7 +56,7 @@
     "LambdaFunction": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
-        "Description": "Google Receipt Validator Lambda Function",
+        "Description": "Apple Receipt Validator Lambda Function",
         "FunctionName": {"Fn::Join": ["-",[{"Ref":"ApplicationName"}, {"Ref":"DeploymentEnv"}]]},
         "Environment": {
           "Variables": {
@@ -77,7 +77,7 @@
         },
         "Code": {
           "S3Bucket": "commerce-artifacts-repo",
-          "S3Key": {"Fn::Join": ["",["release/uk/co/telegraph/google-play-receipt_2.11/",{"Ref": "BuildVersion"},"/google-play-receipt_2.11-",{"Ref": "BuildVersion"},".jar"]]}
+          "S3Key": {"Fn::Join": ["",["release/uk/co/telegraph/apple-receipt_2.11/",{"Ref": "BuildVersion"},"/apple-receipt_2.11-",{"Ref": "BuildVersion"},".jar"]]}
         },
         "Role": {
           "Fn::GetAtt" : ["LambdaExecutionRole", "Arn"]
@@ -92,7 +92,7 @@
           "Fn::Join": [
             "",
             [
-              "{\r\n  \"swagger\": \"2.0\",\r\n  \"info\": {\r\n    \"version\": \"2018-02-22T08:35:11Z\",\r\n    \"title\": \"Google Receipt Validator\"\r\n  },\r\n  \"host\": \"api.telegraph.co.uk\",\r\n  \"schemes\": [\r\n    \"https\"\r\n  ],\r\n  \"paths\": {\r\n    \"\/validatereceipt/googleplay\": {\r\n      \"post\": {\r\n        \"produces\": [\r\n          \"application\/json\"\r\n        ],\r\n        \"responses\": {\r\n          \"200\": {\r\n            \"description\": \"200 response\",\r\n            \"schema\": {\r\n              \"$ref\": \"#\/definitions\/Empty\"\r\n            }\r\n          }\r\n        },\r\n        \"x-amazon-apigateway-integration\": {\r\n          \"responses\": {\r\n            \"default\": {\r\n              \"statusCode\": \"200\"\r\n            }\r\n          },\r\n          \"uri\": \"arn:aws:apigateway:",
+              "{\r\n  \"swagger\": \"2.0\",\r\n  \"info\": {\r\n    \"version\": \"2018-02-22T08:35:11Z\",\r\n    \"title\": \"Apple Receipt Validator\"\r\n  },\r\n  \"host\": \"api.telegraph.co.uk\",\r\n  \"schemes\": [\r\n    \"https\"\r\n  ],\r\n  \"paths\": {\r\n    \"\/validatereceipt/apple\": {\r\n      \"post\": {\r\n        \"produces\": [\r\n          \"application\/json\"\r\n        ],\r\n        \"responses\": {\r\n          \"200\": {\r\n            \"description\": \"200 response\",\r\n            \"schema\": {\r\n              \"$ref\": \"#\/definitions\/Empty\"\r\n            }\r\n          }\r\n        },\r\n        \"x-amazon-apigateway-integration\": {\r\n          \"responses\": {\r\n            \"default\": {\r\n              \"statusCode\": \"200\"\r\n            }\r\n          },\r\n          \"uri\": \"arn:aws:apigateway:",
               {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", {"Fn::GetAtt": ["LambdaFunction", "Arn"]},
               "\/invocations\",\r\n          \"passthroughBehavior\": \"when_no_match\",\r\n          \"httpMethod\": \"POST\",\r\n          \"contentHandling\": \"CONVERT_TO_TEXT\",\r\n          \"type\": \"aws_proxy\"\r\n        }\r\n      }\r\n    }\r\n  },\r\n  \"definitions\": {\r\n    \"Empty\": {\r\n      \"type\": \"object\",\r\n      \"title\": \"Empty Schema\"\r\n    }\r\n  }\r\n}"
             ]

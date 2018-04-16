@@ -1,4 +1,4 @@
-google-play-receipt
+apple-receipt
 -------
 
 Project Description

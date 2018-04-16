@@ -5,7 +5,7 @@ import sbt.Keys._
 lazy val buildNumber = sys.env.get("BUILD_NUMBER").map( bn => s"b$bn")
 
 lazy val CommonSettings = Seq(
-  name              := "google-play-receipt",
+  name              := "apple-receipt",
   organization      := "uk.co.telegraph",
   version           := buildNumber.getOrElse("1.0.0"),
   scalaVersion      := "2.11.8",
@@ -23,7 +23,7 @@ lazy val root = (project in file(".")).
   settings( Defaults.itSettings: _* ).
   settings( CommonSettings     : _* ).
   settings(
-    mainClass              in assembly := Some("uk.co.telegraph.googleplayreceipt.Main"),
+    mainClass              in assembly := Some("uk.co.telegraph.applereceipt.Main"),
     target                 in assembly := file("target"),
     assemblyJarName        in assembly := s"${name.value}-${version.value}.jar",
     test                   in assembly := {},
