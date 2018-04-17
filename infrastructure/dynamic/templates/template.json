@@ -87,7 +87,7 @@
     "ProxyApi": {
       "Type": "AWS::ApiGateway::RestApi",
       "Properties": {
-        "Name": "Google Receipt Proxy API",
+        "Name": "Apple Receipt Proxy API",
         "Body": {
           "Fn::Join": [
             "",
