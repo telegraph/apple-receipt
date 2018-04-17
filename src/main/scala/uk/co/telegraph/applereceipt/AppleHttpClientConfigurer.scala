@@ -8,7 +8,7 @@ import org.apache.http.impl.client.HttpClientBuilder
 
  object AppleHttpClientConfigurer {
   ("{{apple.wait.timeout}}")
-   private val appleWaitTimeout = null
+   private val appleWaitTimeout = 0
 
   ("{{apple.evict.idle.connections}}")
    private val appleEvictIdleConnections = 0L

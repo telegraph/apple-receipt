@@ -18,13 +18,10 @@ object Dependencies {
     "org.apache.httpcomponents" % "httpclient" % "4.5.1",
     "com.fasterxml.jackson.jaxrs" % "jackson-jaxrs-json-provider" % "2.6.3",
     "joda-time" % "joda-time" % "2.9.1",
-    //"org.joda" % "joda-convert" % "1.8.9",
     "com.fasterxml.jackson.core" % "jackson-core" % "2.6.3",
-    "com.fasterxml.jackson.core" % "jackson-annotations" % "2.6.3",
-    "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.3",
-    "com.fasterxml.jackson.dataformat" % "jackson-dataformat-xml" % "2.6.3"
-    //"org.json4s" % "json4s-jackson_3.0.3" % "3.0.3"
-
+    "com.fasterxml.jackson.dataformat" % "jackson-dataformat-xml" % "2.6.3",
+    "org.glassfish.jersey.core" % "jersey-client" % "2.13",
+    "org.scalaj" % "scalaj-http_2.11" % "2.3.0"
   )
 
   lazy val UnitTestDependencies = Seq(

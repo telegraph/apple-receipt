@@ -1,4 +1,4 @@
-package uk.co.telegraph.applereceipt.test
+package uk.co.telegraph.applereceipt
 
 import java.io.{InputStream, OutputStream}
 
@@ -6,12 +6,11 @@ import com.fasterxml.jackson.databind.{JsonMappingException, ObjectMapper}
 import com.typesafe.config.{Config, ConfigFactory}
 import com.typesafe.scalalogging.Logger
 import org.apache.commons.lang3.StringUtils
-import Main._
+import uk.co.telegraph.applereceipt.Main._
 
 trait AppConfig {
   val Environment: String = Option(System.getenv("ENVIRONMENT")) filter { x => x == "qa" || x == "prod" } getOrElse "dev"
   val Config: Config = ConfigFactory.load(s"application.$Environment.conf")
-  val Clock:Clock = new SystemClock
 }
 
 object Main {
@@ -21,9 +20,6 @@ object Main {
   val VERIFICATION_FAILED = "verification failed"
   val TOKEN_EXPIRED = "token expired"
   val DATA_SIGNATURE_IS_MISSING = "dataSignature is missing"
-  val PURCHASE_DATA_IS_MISSING = "purchaseData is missing"
-  private val KEY_FACTORY_ALGORITHM = "RSA"
-  private val SIGNATURE_ALGORITHM = "SHA1withRSA"
 
 
   val OM: ObjectMapper = {
@@ -38,10 +34,10 @@ object Main {
 
 class Main extends AppConfig {
 
-  def validateGooglePlayReceipt(input: InputStream, output: OutputStream) {
+  def validateAppleReceipt(input: InputStream, output: OutputStream) {
     var response: ApiGatewayResponse = null
     try {
-      val validator = ValidateGooglePlayReceipt(Config, Clock)
+      val validator = ValidateAppleReceipt(Config)
 
       val request = OM.readValue(input, classOf[ApiGatewayRequest])
 
@@ -51,7 +47,7 @@ class Main extends AppConfig {
         logger.warn(s"No body found")
         throw new NitroApiException(400, "Body not found", "NBE0000")
       } else {
-        val receiptFromRequest: GoogleReceipt = OM.readValue(request.body, classOf[GoogleReceipt])
+        val receiptFromRequest: ITunesReceipt = OM.readValue(request.body, classOf[ITunesReceipt])
         validator.validate(receiptFromRequest)
         response = ApiGatewayResponse(statusCode = 204)
       }

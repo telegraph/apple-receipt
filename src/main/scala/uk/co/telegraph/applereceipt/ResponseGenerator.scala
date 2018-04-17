@@ -2,12 +2,13 @@ package uk.co.telegraph.applereceipt
 
 import java.util
 
-import uk.co.telegraph.applereceipt.ITunesStatus.ITunesStatus
+import uk.co.telegraph.applereceipt.ITunesStatus._
+import uk.co.telegraph.identity.common.exception.ErrorCode._
 
-object ResponseGenerator extends Enumeration {
-  private val errorCodeMap = new util.HashMap[Integer, ITunesStatus]
+object ResponseGenerator{
+  private val errorCodeMap = new util.HashMap[Status, ErrorCode]
 
-  def getErrorCodesForItunesResponse(itunesStatus: ITunesStatus): Nothing = errorCodeMap.get(itunesStatus)
+  def getErrorCodesForItunesResponse(itunesStatus: Status): ErrorCode = errorCodeMap.get(itunesStatus)
 
   try errorCodeMap.put(ERR_READ_JSON, NBE1015)
   errorCodeMap.put(ERR_BAD_RECEIPT_DATA, NBE1016)
