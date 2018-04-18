@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.{JsonCreator, JsonProperty}
 object ITunesReceipt {
 
   @JsonCreator
-  def apply(@JsonProperty("receipt-data") getReceiptData: String, applePassword: String) = new ITunesReceipt(getReceiptData, applePassword)
+  def apply(getReceiptData: String, applePassword: String) = new ITunesReceipt(getReceiptData, applePassword)
 
   def iTunesReceipt(receiptData: String, password: String) = new ITunesReceipt(receiptData, password)
 }
