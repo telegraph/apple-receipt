@@ -37,7 +37,7 @@ class Main extends AppConfig {
   def validateAppleReceipt(input: InputStream, output: OutputStream) {
     var response: ApiGatewayResponse = null
     try {
-      logger.warn("This is how it starts")
+      logger.warn(s"This is how it starts - environment $Environment")
       val validator = ValidateAppleReceipt(Config)
       logger.warn("Instancing validator " + validator)
 
