@@ -25,9 +25,9 @@ object ValidateAppleReceipt {
   private def buildMessage(itunesStatus: ITunesStatus.Status) = itunesStatus.getCode + " " + itunesStatus.getDescription
 
   def apply(config: Config): ValidateAppleReceipt = new ValidateAppleReceipt(
-    config.getString("apple.url"),
-    config.getString("apple.password"),
-    config.getString("apple.allowedsubscriptions")
+    config.getString("app.apple.url"),
+    config.getString("app.apple.password"),
+    config.getString("app.apple.allowedsubscriptions")
   )
 }
 
