@@ -34,8 +34,9 @@ object ValidateAppleReceipt {
 class ValidateAppleReceipt(val appleUrl:String, val applePassword: String, val allowedSubs: String) {
   private var appleAllowedSubscriptions = util.Arrays.asList(allowedSubs.split(","))
 
-  def validate(receiptRequest: ITunesReceipt): Unit = {
-    val result = Http("http4://receiptValidationHost?httpClientConfigurer=appleHttpClientConfigurer").postData(receiptRequest.toString)
+  def validate(receiptRequest: Receipt): Unit = {
+    val iTunesReceipt:ITunesReceipt = ITunesReceipt(receiptRequest.getReceiptData, applePassword)
+    val result = Http("http4://receiptValidationHost?httpClientConfigurer=appleHttpClientConfigurer").postData(iTunesReceipt.toString)
       .header(CONTENT_TYPE, APPLICATION_JSON)
       .header(ACCEPT, APPLICATION_JSON)
       .asString

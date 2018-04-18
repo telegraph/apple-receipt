@@ -50,8 +50,8 @@ class Main extends AppConfig {
         logger.warn(s"No body found")
         throw new NitroApiException(400, "Body not found", "NBE0000")
       } else {
-        val receiptFromRequest: ITunesReceipt = OM.readValue(request.body, classOf[ITunesReceipt])
-        validator.validate(receiptFromRequest)
+        val receipt: Receipt = OM.readValue(request.body, classOf[Receipt])
+        validator.validate(receipt)
         response = ApiGatewayResponse(statusCode = 204)
       }
     }
