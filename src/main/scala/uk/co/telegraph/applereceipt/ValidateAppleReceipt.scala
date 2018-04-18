@@ -36,7 +36,7 @@ class ValidateAppleReceipt(val appleUrl:String, val applePassword: String, val a
 
   def validate(receiptRequest: Receipt): Unit = {
     val iTunesReceipt:ITunesReceipt = ITunesReceipt(receiptRequest.getReceiptData, applePassword)
-    val result = Http("https://sandbox.itunes.apple.com/verifyReceipt").postData(iTunesReceipt.toString)
+    val result = Http(appleUrl).postData(iTunesReceipt.toString)
       .header(CONTENT_TYPE, APPLICATION_JSON)
       .header(ACCEPT, APPLICATION_JSON)
       .asString
