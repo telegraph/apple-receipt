@@ -37,17 +37,17 @@ class Main extends AppConfig {
   def validateAppleReceipt(input: InputStream, output: OutputStream) {
     var response: ApiGatewayResponse = null
     try {
-      logger.debug("This is how it starts")
+      logger.warn("This is how it starts")
       val validator = ValidateAppleReceipt(Config)
-      logger.debug("Instancing validator " + validator)
+      logger.warn("Instancing validator " + validator)
 
       val request = OM.readValue(input, classOf[ApiGatewayRequest])
-      logger.debug("Request  " + request)
+      logger.warn("Request  " + request)
 
-      logger.debug(s"Got $request")
+      logger.warn(s"Got $request")
 
       if (StringUtils.isEmpty(request.body)) {
-        logger.warn(s"No body found tztz")
+        logger.warn(s"No body found")
         throw new NitroApiException(400, "Body not found", "NBE0000")
       } else {
         val receiptFromRequest: ITunesReceipt = OM.readValue(request.body, classOf[ITunesReceipt])
@@ -57,7 +57,7 @@ class Main extends AppConfig {
     }
     catch {
       case ne: NitroApiException =>
-        logger.warn("TTT Got api exception {}", ne.getErrorMessage)
+        logger.warn(" Got api exception {}", ne.getErrorMessage)
         response = ApiGatewayResponse(statusCode = ne.statusCode, objectBody = ne)
       case je: JsonMappingException =>
         logger.warn("mapping exception {}", je.getMessage)
