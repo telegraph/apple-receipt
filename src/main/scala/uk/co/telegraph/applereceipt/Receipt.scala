@@ -6,6 +6,6 @@ object Receipt {
   def receipt(receiptData: String) = new Receipt(receiptData)
 }
 
-class Receipt @JsonIgnoreProperties private(val receiptData: String) {
+class Receipt @JsonCreator private(val receiptData: String) {
   def getReceiptData: String = receiptData
 }
