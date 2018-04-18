@@ -15,12 +15,10 @@ import uk.co.telegraph.identity.services.api.service.camel.receipt.ResultHolder
 import uk.co.telegraph.applereceipt.HttpStatusCodeMapper.getHttpCodeForItunesResponseCode
 import uk.co.telegraph.applereceipt.ResponseGenerator.getErrorCodesForItunesResponse
 import com.typesafe.config.Config
+import uk.co.telegraph.applereceipt.ValidateAppleReceipt.logger
 
 object ValidateAppleReceipt {
-  val APPLE_RECEIPT_VALIDATOR_ROUTE_ID = "CS-appleValidateReceipt"
-  val APPLE_RECEIPT_VALIDATOR_ENDPOINT: String = "direct:" + APPLE_RECEIPT_VALIDATOR_ROUTE_ID
-  private val CALL_APPLE_SERVICE_ROUTE_ID = "CallAppleService"
-  private val logger = LoggerFactory.getLogger(classOf[ValidateAppleReceipt])
+  val logger = LoggerFactory.getLogger(classOf[ValidateAppleReceipt])
 
   private def buildMessage(itunesStatus: ITunesStatus.Status) = itunesStatus.getCode + " " + itunesStatus.getDescription
 
@@ -36,15 +34,16 @@ class ValidateAppleReceipt(val appleUrl:String, val applePassword: String, val a
 
   def validate(receiptRequest: Receipt): Unit = {
     val iTunesReceipt:ITunesReceipt = ITunesReceipt(receiptRequest.getReceiptData, applePassword)
+    logger.warn("request {}", iTunesReceipt.toString)
     val result = Http(appleUrl).postData(iTunesReceipt.toString)
       .header(CONTENT_TYPE, APPLICATION_JSON)
       .header(ACCEPT, APPLICATION_JSON)
-      .asString
+    logger.warn(s"result $result")
   }
 
-//  @throws[Exception]
-//  private def sendResult(resultHolder: ResultHolder) = if (resultHolder.response.isPresent) exchange.getOut.setBody(resultHolder.response.get)
-//  else throw resultHolder.nitroApiException.get
+  @throws[Exception]
+  private def sendResult(resultHolder: ResultHolder) = if (resultHolder.response.isPresent) exchange.getOut.setBody(resultHolder.response.get)
+  else throw resultHolder.nitroApiException.get
 
 //  @throws[java.io.IOException]
 //  private def getResultHolder(responseCode: Integer) = {

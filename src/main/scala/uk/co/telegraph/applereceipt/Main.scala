@@ -39,12 +39,8 @@ class Main extends AppConfig {
     try {
       logger.warn(s"This is how it starts - environment $Environment")
       val validator = ValidateAppleReceipt(Config)
-      logger.warn("Instancing validator " + validator)
-
       val request = OM.readValue(input, classOf[ApiGatewayRequest])
-      logger.warn("Request  " + request)
-
-      logger.warn(s"Got $request")
+      logger.warn(s"Got request $request")
 
       if (StringUtils.isEmpty(request.body)) {
         logger.warn(s"No body found")
