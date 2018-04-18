@@ -11,7 +11,7 @@ object ITunesReceipt {
 }
 
 class ITunesReceipt private(val receiptData: String, val password: String) {
-  def this(@JsonProperty("receipt-data") receiptData: String) {
+  def this(receiptData: String) {
     this(receiptData, null)
   }
 
