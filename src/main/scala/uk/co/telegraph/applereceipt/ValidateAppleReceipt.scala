@@ -41,9 +41,9 @@ class ValidateAppleReceipt(val appleUrl:String, val applePassword: String, val a
     logger.warn(s"result $result")
   }
 
-  @throws[Exception]
-  private def sendResult(resultHolder: ResultHolder) = if (resultHolder.response.isPresent) exchange.getOut.setBody(resultHolder.response.get)
-  else throw resultHolder.nitroApiException.get
+//  @throws[Exception]
+//  private def sendResult(resultHolder: ResultHolder) = if (resultHolder.response.isPresent) exchange.getOut.setBody(resultHolder.response.get)
+//  else throw resultHolder.nitroApiException.get
 
 //  @throws[java.io.IOException]
 //  private def getResultHolder(responseCode: Integer) = {
