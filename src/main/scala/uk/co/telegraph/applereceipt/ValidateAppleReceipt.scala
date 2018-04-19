@@ -45,10 +45,12 @@ class ValidateAppleReceipt(val appleUrl:String, val applePassword: String, val a
     val jsonObject = JSON.parseFull(result.body)
     val fields = jsonObject.get.asInstanceOf[Map[String, Any]]
     val statusCode = fields.get("status").get.asInstanceOf[Double].toInt
-
-
-    logger.warn(s"result $result")
     logger.warn("statusCode from ITunes {}", statusCode)
+
+    val status = ITunesStatus.getStatus(statusCode)
+
+    logger.warn("Status {}", status)
+    logger.warn("Description {}", status.description)
   }
 
 //  @throws[Exception]
