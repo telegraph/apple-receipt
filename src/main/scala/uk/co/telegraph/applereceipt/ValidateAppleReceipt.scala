@@ -51,26 +51,30 @@ class ValidateAppleReceipt(val appleUrl:String, val applePassword: String, val a
 
     logger.warn("Status {}", status)
     logger.warn("Description {}", status.description)
+
+    val resultHolder = getResultHolder(statusCode)
+    logger.warn("ResultHolder {}", resultHolder)
+    sendResult(resultHolder)
   }
 
-//  @throws[Exception]
-//  private def sendResult(resultHolder: ResultHolder) = if (resultHolder.response.isPresent) exchange.getOut.setBody(resultHolder.response.get)
-//  else throw resultHolder.nitroApiException.get
+  @throws[Exception]
+  private def sendResult(resultHolder: ResultHolder) = if (!resultHolder.response.isEmpty) resultHolder.response.get
+  else throw resultHolder.nitroApiException.get
 
-//  @throws[java.io.IOException]
-//  private def getResultHolder(responseCode: Integer) = {
-//    val resultHolder:ResultHolder.Builder = ResultHolder.builder
-//    if (Response.Status.OK.getStatusCode != responseCode) failOpen(resultHolder)
-//    else handleResponse(resultHolder)
-//    resultHolder.build
-//  }
-//
-//  private def handleResponse(resultHolder: ResultHolder.Builder) = {
+  @throws[java.io.IOException]
+  private def getResultHolder(responseCode: Integer) = {
+    val resultHolder:ResultHolder.Builder = ResultHolder.builder
+    if (Response.Status.OK.getStatusCode != responseCode) failOpen(resultHolder)
+    else handleResponse(resultHolder)
+    resultHolder.build
+  }
+
+  private def handleResponse(resultHolder: ResultHolder.Builder) = {
 //    val iTunesResponse:ITunesResponse = exchange.getIn.getBody(classOf[ITunesResponse])
 //    if (iTunesResponse.isServerDown) failOpen(resultHolder)
 //    else if (iTunesResponse.isFailed) failed(resultHolder, ITunesStatus.getStatus(iTunesResponse.getStatus))
 //    else checkForSubscriptions(resultHolder, iTunesResponse)
-//  }
+  }
 
   private def checkForSubscriptions(resultHolder: ResultHolder.Builder, iTunesResponse: ITunesResponse): Unit = {
     val currentTime = DateTime.now
@@ -98,7 +102,7 @@ class ValidateAppleReceipt(val appleUrl:String, val applePassword: String, val a
       message = ValidateAppleReceipt.buildMessage(itunesStatus)
       errorCode = getErrorCodesForItunesResponse(itunesStatus)
     }
-    ValidateAppleReceipt.logger.warn("Apple receipt validation failed with message {} --- Identity responds with http status {} and error code {}", message, status, errorCode)
+    ValidateAppleReceipt.logger.warn("Apple receipt validation failed with message {} --- Apple-receipt API responds with http status {} and error code {}", message, status, errorCode)
     resultHolder.response(Response.status(status).build)
   }
 

@@ -9,7 +9,7 @@ object ITunesStatus extends Enumeration {
     def getCodeString:String = {Integer.toString(code)}
 
     override
-    def toString: String = String.format("ItunesState{code=%s, description=%s}", code, description)
+    def toString: String = String.format("ITunesStatus{code=%s, description=%s}", code, description)
 
   }
   implicit def valueToStatusVal(x: Value): Status = x.asInstanceOf[Status]

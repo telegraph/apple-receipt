@@ -27,4 +27,6 @@ import com.fasterxml.jackson.annotation.{JsonIgnore, JsonIgnoreProperties}
   def isServerDown: Boolean = ITunesStatus.ERR_SERVER_DOWN.getCode == status
 
   def isFailed: Boolean = ITunesStatus.OK.getCode != status
+
+  override def toString: String = "ITunesResponse{" + "status=" + status + ", receipt=" + receipt + '}'
 }

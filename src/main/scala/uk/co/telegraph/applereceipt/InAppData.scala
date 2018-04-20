@@ -16,4 +16,6 @@ import com.fasterxml.jackson.annotation.{JsonIgnoreProperties, JsonProperty}
   def getExpiresDateMs: String = expiresDateMs
 
   def setExpiresDateMs(expiresDateMs: String): Unit = this.expiresDateMs = expiresDateMs
+
+  override def toString = s"InAppData($productId, $expiresDateMs)"
 }

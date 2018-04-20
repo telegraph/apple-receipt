@@ -12,4 +12,6 @@ class ITunesReceiptData {
   def getInAppData: util.List[InAppData] = inAppData
 
   def setInAppData(inAppData: util.List[InAppData]): Unit = this.inAppData = inAppData
+
+  override def toString = s"ITunesReceiptData($inAppData)"
 }

@@ -22,7 +22,8 @@ object Dependencies {
     "com.fasterxml.jackson.dataformat" % "jackson-dataformat-xml" % "2.6.3",
     "joda-time" % "joda-time" % "2.9.1",
     "org.glassfish.jersey.core" % "jersey-client" % "2.13",
-    "org.scalaj" % "scalaj-http_2.11" % "2.3.0"
+    "org.scalaj" % "scalaj-http_2.11" % "2.3.0",
+    "org.mockito" % "mockito-all" % "1.10.19"
   )
 
   lazy val UnitTestDependencies = Seq(
