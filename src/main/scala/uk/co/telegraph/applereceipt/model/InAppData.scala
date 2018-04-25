@@ -1,4 +1,4 @@
-package uk.co.telegraph.applereceipt
+package uk.co.telegraph.applereceipt.model
 
 import com.fasterxml.jackson.annotation.{JsonIgnoreProperties, JsonProperty}
 

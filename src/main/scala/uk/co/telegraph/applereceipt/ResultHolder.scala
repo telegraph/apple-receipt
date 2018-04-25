@@ -1,6 +1,5 @@
 package uk.co.telegraph.identity.services.api.service.camel.receipt
 
-import com.google.common.base.Optional
 import javax.ws.rs.core.Response
 
 import uk.co.telegraph.applereceipt.NitroApiException

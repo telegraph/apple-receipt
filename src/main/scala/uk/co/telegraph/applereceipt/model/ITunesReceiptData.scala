@@ -1,4 +1,4 @@
-package uk.co.telegraph.applereceipt
+package uk.co.telegraph.applereceipt.model
 
 import java.util
 

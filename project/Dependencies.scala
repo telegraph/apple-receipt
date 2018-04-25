@@ -4,6 +4,7 @@ object Dependencies {
 
   private lazy val JUnit     = "junit"         %  "junit"     % "4.12"
   private lazy val Scalatest = "org.scalatest" %% "scalatest" % "3.0.1"
+  private lazy val ScalaMock = "org.scalamock" %% "scalamock" % "4.1.0"
 
   lazy val ProjectDependencies = Seq(
     "com.typesafe" % "config" % "1.3.1",
@@ -23,17 +24,20 @@ object Dependencies {
     "joda-time" % "joda-time" % "2.9.1",
     "org.glassfish.jersey.core" % "jersey-client" % "2.13",
     "org.scalaj" % "scalaj-http_2.11" % "2.3.0",
-    "org.mockito" % "mockito-all" % "1.10.19"
+    "org.mockito" % "mockito-all" % "1.10.19",
+    "org.json4s" %% "json4s-native" % "3.5.3"
   )
 
   lazy val UnitTestDependencies = Seq(
     JUnit     % Test,
-    Scalatest % Test
+    Scalatest % Test,
+    ScalaMock % Test
   )
 
   lazy val IntTestDependencies = Seq(
     JUnit     % IntegrationTest,
     Scalatest % IntegrationTest,
+    ScalaMock % Test,
 
     // Cucumber Runner
     "com.waioeka.sbt"  %% "cucumber-runner"       % "0.0.5"  % IntegrationTest,

@@ -1,6 +1,7 @@
-package uk.co.telegraph.applereceipt
+package uk.co.telegraph.applereceipt.model
 
 import com.fasterxml.jackson.annotation.{JsonCreator, JsonProperty}
+import uk.co.telegraph.applereceipt.Main
 
 object ITunesReceipt {
 

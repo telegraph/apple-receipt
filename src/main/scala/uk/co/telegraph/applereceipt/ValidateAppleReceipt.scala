@@ -8,14 +8,18 @@ import javax.ws.rs.core.Response
 import com.typesafe.config.Config
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
+import org.json4s.JsonAST.{JInt, JNothing}
+import org.json4s.native.JsonMethods.{compact, parse, render}
 import org.slf4j.LoggerFactory
+import uk.co.telegraph.applereceipt.AppleReceiptConstants._
 import uk.co.telegraph.applereceipt.HttpStatusCodeMapper.getHttpCodeForItunesResponseCode
 import uk.co.telegraph.applereceipt.ResponseGenerator.getErrorCodesForItunesResponse
 import uk.co.telegraph.applereceipt.ValidateAppleReceipt.logger
+import uk.co.telegraph.applereceipt.model.{ITunesReceipt, ITunesReceiptData, ITunesResponse, InAppData}
 import uk.co.telegraph.identity.common.exception.ErrorCode
 import uk.co.telegraph.identity.services.api.service.camel.receipt.ResultHolder
 
-import scala.util.parsing.json.JSON
+import scala.collection.JavaConversions
 import scalaj.http.{Http, HttpResponse}
 
 object ValidateAppleReceipt {
@@ -31,30 +35,60 @@ object ValidateAppleReceipt {
 }
 
 class ValidateAppleReceipt(val appleUrl:String, val applePassword: String, val allowedSubs: String) {
-  private var appleAllowedSubscriptions = util.Arrays.asList(allowedSubs.split(","))
+  private val appleAllowedSubscriptions = allowedSubs.split(",")
 
-  def validate(receiptRequest: Receipt): Unit = {
+  def validate(receiptRequest: Receipt): ResultHolder = {
     val iTunesReceipt:ITunesReceipt = ITunesReceipt(receiptRequest.getReceiptData, applePassword)
     logger.warn("request {}", iTunesReceipt.toString)
 
-    val result:HttpResponse[String] = Http(appleUrl).postData(iTunesReceipt.toString)
+    val result = callAppleUrl(appleUrl, iTunesReceipt.toString)
+
+    val resultHolder = getITunesResponse(result)
+    sendResult(resultHolder)
+    resultHolder
+  }
+
+  def callAppleUrl(appleUrl:String, iTunesReceipt: String):HttpResponse[String] = {
+    Http(appleUrl).postData(iTunesReceipt)
       .header(CONTENT_TYPE, APPLICATION_JSON)
       .header(ACCEPT, APPLICATION_JSON)
       .execute()
+  }
 
-    val jsonObject = JSON.parseFull(result.body)
-    val fields = jsonObject.get.asInstanceOf[Map[String, Any]]
-    val statusCode = fields.get("status").get.asInstanceOf[Double].toInt
-    logger.warn("statusCode from ITunes {}", statusCode)
+  def getITunesResponse(httpResponse : HttpResponse[String]): ResultHolder = {
+    val status = parse(httpResponse.body) \ STATUS
+    if (httpResponse.isSuccess) {
+      val iTunesResponse = new ITunesResponse
+      val statusCode = status.asInstanceOf[JInt].num.intValue()
+      iTunesResponse.setStatus(statusCode)
+      val iTunesReceiptData = new ITunesReceiptData
 
-    val status = ITunesStatus.getStatus(statusCode)
+      val jsonObject = parse(httpResponse.body) \ RECEIPT \ IN_APP
 
-    logger.warn("Status {}", status)
-    logger.warn("Description {}", status.description)
+      var inAppDataList = List[InAppData]()
 
-    val resultHolder = getResultHolder(statusCode)
-    logger.warn("ResultHolder {}", resultHolder)
-    sendResult(resultHolder)
+      for (child <- jsonObject.children) {
+        val productData = parse(compact(render(child)))
+        val inAppData = new InAppData
+        if ((productData \ PRODUCT_ID) != JNothing) {
+          val productId = productData \ PRODUCT_ID
+          inAppData.setProductId(productId.values.toString)
+        }
+        if ((productData \ EXPIRES_DATE_MS) != JNothing) {
+          val expiresData = productData \ EXPIRES_DATE_MS
+          inAppData.setExpiresDateMs(expiresData.values.toString)
+        }
+        inAppDataList ::= inAppData
+      }
+      iTunesReceiptData.setInAppData(JavaConversions.seqAsJavaList(inAppDataList))
+      iTunesResponse.setReceipt(iTunesReceiptData)
+      logger.warn("iTunesResponse {}", iTunesResponse)
+      getResultHolder(iTunesResponse)
+    } else {
+      val resultHolder:ResultHolder.Builder = ResultHolder.builder
+      resultHolder.response(Response.status(Response.Status.NO_CONTENT).build)
+      resultHolder.build
+    }
   }
 
   @throws[Exception]
@@ -62,18 +96,19 @@ class ValidateAppleReceipt(val appleUrl:String, val applePassword: String, val a
   else throw resultHolder.nitroApiException.get
 
   @throws[java.io.IOException]
-  private def getResultHolder(responseCode: Integer) = {
+  private def getResultHolder(iTunesResponse: ITunesResponse) = {
     val resultHolder:ResultHolder.Builder = ResultHolder.builder
-    if (Response.Status.OK.getStatusCode != responseCode) failOpen(resultHolder)
-    else handleResponse(resultHolder)
+    handleResponse(iTunesResponse, resultHolder)
     resultHolder.build
   }
 
-  private def handleResponse(resultHolder: ResultHolder.Builder) = {
-//    val iTunesResponse:ITunesResponse = exchange.getIn.getBody(classOf[ITunesResponse])
-//    if (iTunesResponse.isServerDown) failOpen(resultHolder)
-//    else if (iTunesResponse.isFailed) failed(resultHolder, ITunesStatus.getStatus(iTunesResponse.getStatus))
-//    else checkForSubscriptions(resultHolder, iTunesResponse)
+  private def handleResponse(iTunesResponse: ITunesResponse, resultHolder: ResultHolder.Builder) = {
+    if (iTunesResponse.isServerDown)
+      failOpen(resultHolder)
+    else if (iTunesResponse.isFailed)
+      failed(resultHolder, ITunesStatus.getStatus(iTunesResponse.getStatus))
+    else
+      checkForSubscriptions(resultHolder, iTunesResponse)
   }
 
   private def checkForSubscriptions(resultHolder: ResultHolder.Builder, iTunesResponse: ITunesResponse): Unit = {
@@ -106,5 +141,7 @@ class ValidateAppleReceipt(val appleUrl:String, val applePassword: String, val a
     resultHolder.response(Response.status(status).build)
   }
 
-  private def failOpen(resultHolder: ResultHolder.Builder) = resultHolder.response(Response.status(Response.Status.NO_CONTENT).build)
+  private def failOpen(resultHolder: ResultHolder.Builder) = {
+    resultHolder.response(Response.status(Response.Status.NO_CONTENT).build)
+  }
 }

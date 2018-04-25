@@ -1,12 +1,17 @@
-package uk.co.telegraph.applereceipt
+package uk.co.telegraph.applereceipt.model
 
 import java.util
 
-import com.fasterxml.jackson.annotation.{JsonIgnore, JsonIgnoreProperties}
+import com.fasterxml.jackson.annotation.{JsonIgnore, JsonIgnoreProperties, JsonProperty}
+import uk.co.telegraph.applereceipt.ITunesStatus
 
 @JsonIgnoreProperties(ignoreUnknown = true) class ITunesResponse {
+
+  @JsonProperty("status")
   private var status:Int = 0
   private var exception:String = null
+
+  @JsonProperty("receipt")
   private var receipt:ITunesReceiptData = null
 
   @JsonIgnore
