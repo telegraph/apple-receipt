@@ -138,6 +138,7 @@ class ValidateAppleReceipt(val appleUrl:String, val applePassword: String, val a
       errorCode = getErrorCodesForItunesResponse(itunesStatus)
     }
     ValidateAppleReceipt.logger.warn("Apple receipt validation failed with message {} --- Apple-receipt API responds with http status {} and error code {}", message, status, errorCode)
+    resultHolder.responseBody(message)
     resultHolder.response(Response.status(status).build)
   }
 

@@ -47,8 +47,8 @@ class Main extends AppConfig {
         throw new NitroApiException(400, "Body not found", "NBE0000")
       } else {
         val receipt: Receipt = OM.readValue(request.body, classOf[Receipt])
-        validator.validate(receipt)
-        response = ApiGatewayResponse(statusCode = 204)
+        val resultHolder = validator.validate(receipt)
+        response = ApiGatewayResponse(statusCode = resultHolder.response.get.getStatus, objectBody = resultHolder.responseBody.get)
       }
     }
     catch {
