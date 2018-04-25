@@ -39,7 +39,7 @@ class ValidateAppleReceipt(val appleUrl:String, val applePassword: String, val a
 
   def validate(receiptRequest: Receipt): ResultHolder = {
     val iTunesReceipt:ITunesReceipt = ITunesReceipt(receiptRequest.getReceiptData, applePassword)
-    logger.warn("Make request {} to {}", iTunesReceipt.toString, appleUrl)
+    logger.warn("Make request " + iTunesReceipt + " to "+ appleUrl)
 
     val result = callAppleUrl(appleUrl, iTunesReceipt.toString)
 
