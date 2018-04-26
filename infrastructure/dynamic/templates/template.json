@@ -22,7 +22,7 @@
     "LambdaMemory": {
       "Description": "The memory used for lambda function [MB]",
       "Type": "Number",
-      "Default": 512,
+      "Default": 1024,
       "AllowedValues": [
         128,
         256,
