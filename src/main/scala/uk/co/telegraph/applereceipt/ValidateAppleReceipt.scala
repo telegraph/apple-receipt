@@ -51,7 +51,7 @@ class ValidateAppleReceipt(val appleUrl:String, val applePassword: String, val a
     Http(appleUrl).postData(iTunesReceipt)
       .header(CONTENT_TYPE, APPLICATION_JSON)
       .header(ACCEPT, APPLICATION_JSON)
-      .timeout(connTimeoutMs = 1000, readTimeoutMs = 8000)
+      .timeout(connTimeoutMs = 1000, readTimeoutMs = 10000)
       .execute()
   }
 
