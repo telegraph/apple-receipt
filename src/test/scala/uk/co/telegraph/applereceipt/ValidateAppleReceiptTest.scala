@@ -15,6 +15,7 @@ import org.mockito.Mockito._
 import org.mockito.runners.MockitoJUnitRunner
 import uk.co.telegraph.applereceipt.ITunesStatus._
 import uk.co.telegraph.applereceipt.ValidateAppleReceiptTest._
+import uk.co.telegraph.applereceipt.model.Receipt
 
 import scalaj.http.HttpResponse
 

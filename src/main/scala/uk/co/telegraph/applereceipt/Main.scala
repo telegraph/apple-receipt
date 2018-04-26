@@ -7,6 +7,7 @@ import com.typesafe.config.{Config, ConfigFactory}
 import com.typesafe.scalalogging.Logger
 import org.apache.commons.lang3.StringUtils
 import uk.co.telegraph.applereceipt.Main._
+import uk.co.telegraph.applereceipt.model.{ApiGatewayRequest, ApiGatewayResponse, Receipt}
 
 trait AppConfig {
   val Environment: String = Option(System.getenv("ENVIRONMENT")) filter { x => x == "qa" || x == "prod" } getOrElse "dev"

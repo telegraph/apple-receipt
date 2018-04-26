@@ -1,9 +1,10 @@
-package uk.co.telegraph.applereceipt
+package uk.co.telegraph.applereceipt.model
 
 import java.nio.charset.StandardCharsets
 import java.util.Base64
 
 import com.fasterxml.jackson.core.JsonProcessingException
+import uk.co.telegraph.applereceipt.Main
 
 object ApiGatewayResponse {
 

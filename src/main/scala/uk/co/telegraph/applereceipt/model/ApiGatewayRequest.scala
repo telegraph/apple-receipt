@@ -1,9 +1,10 @@
-package uk.co.telegraph.applereceipt
+package uk.co.telegraph.applereceipt.model
 
 import java.nio.charset.StandardCharsets
 import java.util.Base64
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import uk.co.telegraph.applereceipt.Main
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class ApiGatewayRequest(val resource: String,

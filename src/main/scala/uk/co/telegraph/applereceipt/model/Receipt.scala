@@ -1,6 +1,6 @@
-package uk.co.telegraph.applereceipt
+package uk.co.telegraph.applereceipt.model
 
-import com.fasterxml.jackson.annotation.{JsonCreator, JsonIgnore, JsonIgnoreProperties}
+import com.fasterxml.jackson.annotation.JsonCreator
 
 object Receipt {
   def receipt(receiptData: String) = new Receipt(receiptData)

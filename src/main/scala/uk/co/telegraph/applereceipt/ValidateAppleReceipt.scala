@@ -1,6 +1,5 @@
 package uk.co.telegraph.applereceipt
 
-import java.util
 import javax.ws.rs.core.HttpHeaders.{ACCEPT, CONTENT_TYPE}
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
@@ -15,7 +14,7 @@ import uk.co.telegraph.applereceipt.AppleReceiptConstants._
 import uk.co.telegraph.applereceipt.HttpStatusCodeMapper.getHttpCodeForItunesResponseCode
 import uk.co.telegraph.applereceipt.ResponseGenerator.getErrorCodesForItunesResponse
 import uk.co.telegraph.applereceipt.ValidateAppleReceipt.logger
-import uk.co.telegraph.applereceipt.model.{ITunesReceipt, ITunesReceiptData, ITunesResponse, InAppData}
+import uk.co.telegraph.applereceipt.model._
 import uk.co.telegraph.identity.common.exception.ErrorCode
 import uk.co.telegraph.identity.services.api.service.camel.receipt.ResultHolder
 
@@ -52,6 +51,7 @@ class ValidateAppleReceipt(val appleUrl:String, val applePassword: String, val a
     Http(appleUrl).postData(iTunesReceipt)
       .header(CONTENT_TYPE, APPLICATION_JSON)
       .header(ACCEPT, APPLICATION_JSON)
+      .timeout(connTimeoutMs = 1000, readTimeoutMs = 8000)
       .execute()
   }
 
