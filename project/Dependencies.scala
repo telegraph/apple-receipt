@@ -8,7 +8,6 @@ object Dependencies {
 
   lazy val ProjectDependencies = Seq(
     "com.typesafe" % "config" % "1.3.1",
-    "com.typesafe.scala-logging" % "scala-logging_2.11" % "3.7.2",
     "org.slf4j" % "slf4j-simple" % "1.7.25",
     "com.fasterxml.jackson.core" % "jackson-databind" % "2.8.5",
     "com.fasterxml.jackson.core" % "jackson-annotations" % "2.8.5",
@@ -25,7 +24,13 @@ object Dependencies {
     "org.glassfish.jersey.core" % "jersey-client" % "2.13",
     "org.scalaj" % "scalaj-http_2.11" % "2.3.0",
     "org.mockito" % "mockito-all" % "1.10.19",
-    "org.json4s" %% "json4s-native" % "3.5.3"
+    "org.json4s" %% "json4s-native" % "3.5.3",
+    "net.logstash.logback" % "logstash-logback-encoder" % "4.10",
+    "ch.qos.logback" % "logback-classic" % "1.2.3" ,
+    "ch.qos.logback" % "logback-core" % "1.2.3",
+    "org.jlib" % "jlib-awslambda-logback" % "1.0.0",
+    "uk.co.telegraph.integration.common" %  "structure-logging-scala" % "1.2.8"
+
   )
 
   lazy val UnitTestDependencies = Seq(

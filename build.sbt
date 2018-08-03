@@ -55,3 +55,15 @@ publishArtifact in (Compile, packageDoc) := false
 publishArtifact in (Compile, packageSrc) := false
 
 addArtifact(artifact in (Compile, assembly), assembly)
+assemblyMergeStrategy in assembly := {
+  case "logback.xml"  => MergeStrategy.rename
+  case "module-info.class" => MergeStrategy.first
+  case PathList("org","apache","log4j", xs @ _*) => MergeStrategy.first
+  case PathList("org","hamcrest", xs @ _*) => MergeStrategy.first
+  case PathList("org","slf4j", "impl", "StaticLoggerBinder.class") => MergeStrategy.discard
+  case PathList("org","slf4j", "impl", "StaticMDCBinder.class") => MergeStrategy.discard
+  case PathList("org","slf4j", "impl", "StaticMarkerBinder.class") => MergeStrategy.discard
+  case x =>
+    val oldStrategy = (assemblyMergeStrategy in assembly).value
+    oldStrategy(x)
+}

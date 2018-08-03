@@ -2,9 +2,10 @@ package uk.co.telegraph.applereceipt
 
 import java.io.{InputStream, OutputStream}
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import com.fasterxml.jackson.databind.{JsonMappingException, ObjectMapper}
 import com.typesafe.config.{Config, ConfigFactory}
-import com.typesafe.scalalogging.Logger
 import org.apache.commons.lang3.StringUtils
 import uk.co.telegraph.applereceipt.Main._
 import uk.co.telegraph.applereceipt.model.{ApiGatewayRequest, ApiGatewayResponse, Receipt}
@@ -29,14 +30,14 @@ object Main {
     new ObjectMapper().registerModule(new DefaultScalaModule)
   }
 
-  val logger: Logger = Logger(classOf[Main])
+  val logger: Logger = LoggerFactory.getLogger(classOf[Main])
 }
-
 
 class Main extends AppConfig {
 
   def validateAppleReceipt(input: InputStream, output: OutputStream) {
     var response: ApiGatewayResponse = null
+    LoggingUtil.initLog()
     try {
       logger.warn(s"Environment $Environment")
       val validator = ValidateAppleReceipt(Config)

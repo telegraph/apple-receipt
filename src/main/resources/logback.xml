@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!--<appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">-->
+    <appender name="JSON" class="org.jlib.cloud.aws.lambda.logback.AwsLambdaAppender">
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            uncomment the following line for displaying logs in pretty format - recommended for local debugging
+            <jsonGeneratorDecorator class="uk.co.telegraph.common.structured.logging.PrettyPrintingEncoder"/>
+            <fieldNames>
+                <timestamp>timestamp</timestamp>
+                <level>[ignore]</level>
+                <levelValue>[ignore]</levelValue>
+                <version>[ignore]</version>
+                <logger>[ignore]</logger>
+                <thread>[ignore]</thread>
+                <callerClass>[ignore]</callerClass>
+                <callerMethod>[ignore]</callerMethod>
+                <callerFile>[ignore]</callerFile>
+                <callerLine>[ignore]</callerLine>
+                <message>[ignore]</message>
+                <stackTrace>stacktrace</stackTrace>
+            </fieldNames>
+            <includeCallerData>true</includeCallerData>
+            <provider class="net.logstash.logback.composite.loggingevent.LoggingEventPatternJsonProvider">
+                <pattern>
+                    {
+                    "message": "%replace(%replace(%replace(%m){'\"authKey\":\"[\\w\\s\\S]+?\"', '\"authKey\":\"xxxx\"'}){'\"newPassword\":\"[\\w\\s\\S]+?\"', '\"newPassword\":\"xxxx\"'}){'&lt;password&gt;[\\w\\s\\S]+?&lt;/password&gt;', '&lt;password&gt;xxxx&lt;/password&gt;'}",
+                    "loggerName":"%logger{36}",
+                    "threadName":"[%thread]",
+                    "logLevel":"%-5level",
+                    "callerClass":"%C",
+                    "callerMethod":"%M",
+                    "callerFile":"%F",
+                    "callerLine":"%L"
+                    }
+                </pattern>
+            </provider>
+        </encoder>
+    </appender>
+
+    <root level="debug">
+        <appender-ref ref="JSON" />
+    </root>
+
+</configuration>
