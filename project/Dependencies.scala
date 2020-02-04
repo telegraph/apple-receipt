@@ -29,6 +29,7 @@ object Dependencies {
     "ch.qos.logback" % "logback-classic" % "1.2.3" ,
     "ch.qos.logback" % "logback-core" % "1.2.3",
     "org.jlib" % "jlib-awslambda-logback" % "1.0.0",
+    "io.reactivex" % "rxscala_2.11" % "0.22.0",
     "uk.co.telegraph.integration.common" %  "structure-logging-scala" % "1.2.8"
 
   )
